@@ -1,0 +1,80 @@
+<resources>
+    <string name="nome_app">Hora Certa</string>
+    <string name="slogan">Sua saúde no tempo certo.</string>
+    <string name="titulo_consentimento">Termos e Privacidade</string>
+    <string name="texto_consentimento">Para continuar utilizando o Hora Certa, você precisa estar de acordo com nossas diretrizes. Nosso aplicativo respeita integralmente as regras da LGPD (Lei Geral de Proteção de Dados).</string>
+    <string name="link_termos">Ver Termos de Uso detalhados</string>
+    <string name="check_concordo">Li e concordo com os termos de uso</string>
+    <string name="botao_concordar">Concordar e Continuar</string>
+
+    <!-- Tela de Termos Detalhados -->
+    <string name="titulo_termos_detalhados">Termos de Uso Política e privacidade</string>
+    <string name="texto_termos_completo">1. Sobre o aplicativo\n
+        O aplicativo Hora Certa tem como objetivo auxiliar usuários no gerenciamento de medicamentos, oferecendo lembretes e registro de uso.\n\n2.
+
+        Coleta de dados\n
+        O aplicativo pode coletar as seguintes informações fornecidas pelo usuário:\n
+         - Nome\n
+         - Informações sobre medicamentos (nome, dosagem, horários)\n
+        Esses dados são utilizados exclusivamente para o funcionamento do aplicativo.\n\n3.
+
+        Armazenamento das Informações\n
+        Todas as informações são armazenadas localmente no dispositivo do usuário, não sendo enviadas para servidores externos ou compartilhadas com terceiros.\n\n4.
+
+        Uso das Infomações\n
+        Os dados coletados são utilizados apenas para:\n
+
+         - Gerenciar os medicamentos cadastrados\n
+         - Gerar lembretes de horários\n
+         - Exibir histórico de uso\n\n5.
+
+        Compartilhamento de Dados\n
+        O aplicativo não compartilha dados pessoais com terceiros.\n\n6.
+
+        Segurança\n
+        Embora os dados sejam armazenados localmente, o aplicativo adota boas práticas de desenvolvimento para garantir a proteção das informações.\n\n7.
+
+        Consentimento\n
+        Ao utilizar o aplicativo, o usuário declara que:\n
+
+         - Leu e concorda com estes termos\n
+         - Autoriza o uso dos dados conforme descrito\n\n8.
+
+        Exclusão de Dados\n
+        O usuário pode, a qualquer momento, excluir seus dados diretamente no aplicativo, removendo todas as informações armazenadas.\n\n9.
+
+        Limitação e Responsabilidade\n
+        O aplicativo não substitui orientação médica. O usuário é responsável pelo uso correto das informações e medicamentos.\n\n10.
+
+        Alteração de termos\n
+        Estes termos podem ser atualizados a qualquer momento para melhorias no aplicativo.\n\n11.
+
+        Contato\n
+        Para dúvidas ou sugestões, o usuário pode entrar em contato com o desenvolvedor.
+    </string>
+    <string name="botao_voltar">Voltar</string>
+
+    <!-- Tela de Apelido -->
+    <string name="titulo_apelido">Como podemos te chamar?</string>
+    <string name="descricao_apelido">Escolha um apelido para personalizar sua experiência no app.</string>
+    <string name="hint_apelido">Digite seu apelido</string>
+    <string name="botao_proximo">Próximo</string>
+    <string name="erro_apelido">Por favor, digite um apelido.</string>
+
+    <!-- Tela de Boas-vindas -->
+    <string name="titulo_boas_vindas">Prazer em conhecê-lo, %1$s!</string>
+    <string name="descricao_boas_vindas">Agora que já nos conhecemos, vamos configurar seus lembretes de medicamentos para você não perder a hora certa.</string>
+    <string name="botao_comecar">Começar</string>
+
+    <!-- Tela de Perfil -->
+    <string name="saudacao_perfil">Olá, %1$s!</string>
+    <string name="descricao_perfil">Conte-nos mais sobre você para ajudarmos a adaptar o aplicativo para suas necessidades.</string>
+    <string name="label_sexo">Sexo</string>
+    <string name="hint_sexo">Selecione uma opção</string>
+    <string name="sexo_feminino">Feminino</string>
+    <string name="sexo_masculino">Masculino</string>
+    <string name="sexo_nao_informar">Prefiro não informar</string>
+    <string name="label_ano_nascimento">Ano de Nascimento</string>
+    <string name="botao_selecionar_ano">Escolher Ano</string>
+    <string name="erro_perfil">Por favor, preencha todas as informações.</string>
+</resources>

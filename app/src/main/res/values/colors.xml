@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="preto">#FF000000</color>
+    <color name="branco">#FFFFFFFF</color>
+    <color name="azul_logo">#14C2D3</color>
+    <color name="laranja_logo">#FF9E2C</color>
+    <color name="verde_folha">#7ED957</color>
+    <color name="azul_claro">#E0F7FA</color>
+    <color name="azul_escuro">#112F57</color>
+</resources>
