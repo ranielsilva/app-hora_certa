@@ -16,7 +16,7 @@
         android:contentDescription="Voltar"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_top_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/preto" />
 
     <TextView
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_voltar_cadastro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_top_toTopOf="@id/btn_voltar_cadastro" />
+        app:layout_constraintTop_toTopOf="@id/btn_voltar_cadastro" />
 
     <!-- Etapa 1: Nome do Medicamento -->
     <LinearLayout
@@ -48,7 +48,8 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/logo_hora_certa2"
-            android:alpha="0.8" />
+            android:alpha="0.8"
+            android:contentDescription="Logo" />
 
         <TextView
             android:layout_width="match_parent"
@@ -69,7 +70,8 @@
             android:inputType="textCapWords"
             android:padding="12dp"
             android:background="@drawable/fundo_card_branco"
-            android:elevation="2dp" />
+            android:elevation="2dp"
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/btn_proximo_nome"
@@ -146,7 +148,49 @@
             android:textColor="@color/branco" />
     </LinearLayout>
 
-    <!-- Etapa 3: Tratamento/Doença -->
+    <!-- Etapa 3: Horário (NOVA) -->
+    <LinearLayout
+        android:id="@+id/layout_horario_med"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_voltar_cadastro">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Qual o horário da primeira dose?"
+            android:textAlignment="center"
+            android:textColor="@color/preto"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_selecionar_horario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/branco"
+            android:text="08:00"
+            android:textColor="@color/preto"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:padding="16dp" />
+
+        <Button
+            android:id="@+id/btn_proximo_horario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/azul_logo"
+            android:text="Próximo"
+            android:textColor="@color/branco" />
+    </LinearLayout>
+
+    <!-- Etapa 4: Tratamento/Doença -->
     <LinearLayout
         android:id="@+id/layout_tratamento_med"
         android:layout_width="match_parent"
@@ -175,7 +219,8 @@
             android:inputType="textCapSentences"
             android:padding="12dp"
             android:background="@drawable/fundo_card_branco"
-            android:elevation="2dp" />
+            android:elevation="2dp"
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/btn_salvar_med"

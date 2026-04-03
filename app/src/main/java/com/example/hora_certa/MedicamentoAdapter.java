@@ -27,10 +27,13 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Medicamento medicamento = listaMedicamentos.get(position);
         holder.tvNome.setText(medicamento.getNome());
-        holder.tvHorario.setText(medicamento.getHorario());
+        
+        // Exibe Horário + Frequência (Ex: 08:00 - Uma vez por dia)
+        String infoHorario = medicamento.getHorario() + " - " + medicamento.getFrequencia();
+        holder.tvHorario.setText(infoHorario);
+        
         holder.tvStatus.setText(medicamento.getStatus());
 
-        // Ajuste de cor baseado no status (exemplo simples)
         if ("Tomado".equalsIgnoreCase(medicamento.getStatus())) {
             holder.tvStatus.setBackgroundResource(R.drawable.fundo_status_tomado);
         } else {

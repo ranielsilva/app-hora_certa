@@ -16,7 +16,7 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar"> <!-- Sem barra de título para a Splash -->
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,9 +25,15 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <!-- Removido o intent-filter de launcher daqui -->
-        </activity>
+            android:exported="true" />
+
+        <activity
+            android:name=".TelaInicialActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".CadastroMedicamentoActivity"
+            android:exported="true" />
 
     </application>
 

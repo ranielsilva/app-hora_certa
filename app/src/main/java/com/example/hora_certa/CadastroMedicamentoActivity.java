@@ -1,5 +1,6 @@
 package com.example.hora_certa;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,14 +16,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 public class CadastroMedicamentoActivity extends AppCompatActivity {
 
-    private LinearLayout layoutNome, layoutFrequencia, layoutTratamento;
+    private LinearLayout layoutNome, layoutFrequencia, layoutHorario, layoutTratamento;
     private EditText etNome, etTratamento;
     private RadioGroup rgFrequencia;
+    private Button btnSelecionarHorario;
     private Animation animEntrada;
 
-    private String nomeMed, frequenciaMed, tratamentoMed;
+    private String nomeMed, frequenciaMed, horarioMed = "08:00", tratamentoMed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +37,17 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
         // Inicializar Views
         layoutNome = findViewById(R.id.layout_nome_med);
         layoutFrequencia = findViewById(R.id.layout_frequencia_med);
+        layoutHorario = findViewById(R.id.layout_horario_med);
         layoutTratamento = findViewById(R.id.layout_tratamento_med);
         
         etNome = findViewById(R.id.et_nome_medicamento);
         etTratamento = findViewById(R.id.et_tratamento);
         rgFrequencia = findViewById(R.id.rg_frequencia);
+        btnSelecionarHorario = findViewById(R.id.btn_selecionar_horario);
 
         Button btnProximoNome = findViewById(R.id.btn_proximo_nome);
         Button btnProximoFreq = findViewById(R.id.btn_proximo_frequencia);
+        Button btnProximoHorario = findViewById(R.id.btn_proximo_horario);
         Button btnSalvar = findViewById(R.id.btn_salvar_med);
         ImageButton btnVoltar = findViewById(R.id.btn_voltar_cadastro);
 
@@ -62,9 +70,13 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
             } else {
                 RadioButton rb = findViewById(selectedId);
                 frequenciaMed = rb.getText().toString();
-                exibirLayout(layoutTratamento);
+                exibirLayout(layoutHorario);
             }
         });
+
+        btnSelecionarHorario.setOnClickListener(v -> abrirTimePicker());
+
+        btnProximoHorario.setOnClickListener(v -> exibirLayout(layoutTratamento));
 
         btnSalvar.setOnClickListener(v -> {
             tratamentoMed = etTratamento.getText().toString().trim();
@@ -78,9 +90,23 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
         btnVoltar.setOnClickListener(v -> finish());
     }
 
+    private void abrirTimePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int hora = calendar.get(Calendar.HOUR_OF_DAY);
+        int minuto = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            horarioMed = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+            btnSelecionarHorario.setText(horarioMed);
+        }, hora, minuto, true);
+
+        timePickerDialog.show();
+    }
+
     private void exibirLayout(LinearLayout layoutParaExibir) {
         layoutNome.setVisibility(View.GONE);
         layoutFrequencia.setVisibility(View.GONE);
+        layoutHorario.setVisibility(View.GONE);
         layoutTratamento.setVisibility(View.GONE);
 
         layoutParaExibir.setVisibility(View.VISIBLE);
@@ -88,9 +114,9 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
     }
 
     private void salvarERetornar() {
-        // Como ainda não temos banco de dados, passamos o resultado de volta para a TelaInicialActivity
         Intent resultIntent = new Intent();
         resultIntent.putExtra("NOME", nomeMed);
+        resultIntent.putExtra("HORARIO", horarioMed);
         resultIntent.putExtra("FREQUENCIA", frequenciaMed);
         resultIntent.putExtra("TRATAMENTO", tratamentoMed);
         setResult(RESULT_OK, resultIntent);

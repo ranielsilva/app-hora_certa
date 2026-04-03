@@ -1,6 +1,9 @@
 package com.example.hora_certa;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,9 +29,17 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "HoraCertaPrefs";
+    private static final String KEY_CONSENTIMENTO = "consentimento_aceito";
+    private static final String KEY_APELIDO = "apelido";
+    private static final String KEY_SEXO = "sexo";
+    private static final String KEY_ANO_NASCIMENTO = "ano_nascimento";
+    private static final String KEY_CONFIG_CONCLUIDA = "config_concluida";
+
     private int anoSelecionado = -1;
     private ImageButton botao_voltar_fluxo;
     private ConstraintLayout layout_consentimento, layout_termos_detalhados, layout_apelido, layout_perfil, layout_boas_vindas;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.principal), (v, insets) -> {
             Insets barras_sistema = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(barras_sistema.left, barras_sistema.top, barras_sistema.right, barras_sistema.bottom);
@@ -77,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         // Animações
         Animation animacao_subir = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
+        // Verificar estado salvo e pular telas concluídas
+        verificarEstadoSalvo();
+
         // --- Lógica do Botão Voltar ---
         botao_voltar_fluxo.setOnClickListener(v -> {
             voltarParaTelaAnterior();
@@ -101,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         botao_concordar.setOnClickListener(v -> {
+            salvarBooleano(KEY_CONSENTIMENTO, true);
             layout_consentimento.setVisibility(View.GONE);
             layout_apelido.setVisibility(View.VISIBLE);
             layout_apelido.startAnimation(animacao_subir);
@@ -114,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             if (apelido.isEmpty()) {
                 et_apelido.setError(getString(R.string.erro_apelido));
             } else {
+                salvarString(KEY_APELIDO, apelido);
                 tv_saudacao_perfil.setText(getString(R.string.saudacao_perfil, apelido));
                 layout_apelido.setVisibility(View.GONE);
                 layout_perfil.setVisibility(View.VISIBLE);
@@ -157,7 +175,10 @@ public class MainActivity extends AppCompatActivity {
             if (sexo.isEmpty() || anoSelecionado == -1) {
                 Toast.makeText(this, R.string.erro_perfil, Toast.LENGTH_SHORT).show();
             } else {
-                String apelido = et_apelido.getText().toString().trim();
+                salvarString(KEY_SEXO, sexo);
+                salvarInt(KEY_ANO_NASCIMENTO, anoSelecionado);
+                
+                String apelido = sharedPreferences.getString(KEY_APELIDO, "");
                 tv_titulo_boas_vindas.setText(getString(R.string.titulo_boas_vindas, apelido));
                 
                 layout_perfil.setVisibility(View.GONE);
@@ -169,12 +190,60 @@ public class MainActivity extends AppCompatActivity {
 
         // --- Finalização ---
         botao_comecar.setOnClickListener(v -> {
-            Toast.makeText(this, "Iniciando o Hora Certa!", Toast.LENGTH_SHORT).show();
+            salvarBooleano(KEY_CONFIG_CONCLUIDA, true);
+            abrirTelaInicial();
         });
     }
 
+    private void abrirTelaInicial() {
+        Intent intent = new Intent(MainActivity.this, TelaInicialActivity.class);
+        startActivity(intent);
+        finish(); // Finaliza a MainActivity para que o usuário não volte para o cadastro
+    }
+
+    private void verificarEstadoSalvo() {
+        boolean configConcluida = sharedPreferences.getBoolean(KEY_CONFIG_CONCLUIDA, false);
+        if (configConcluida) {
+            abrirTelaInicial();
+            return;
+        }
+
+        boolean consentimentoAceito = sharedPreferences.getBoolean(KEY_CONSENTIMENTO, false);
+        String apelidoSalvo = sharedPreferences.getString(KEY_APELIDO, null);
+        String sexoSalvo = sharedPreferences.getString(KEY_SEXO, null);
+        int anoSalvo = sharedPreferences.getInt(KEY_ANO_NASCIMENTO, -1);
+
+        if (sexoSalvo != null && anoSalvo != -1) {
+            layout_consentimento.setVisibility(View.GONE);
+            layout_boas_vindas.setVisibility(View.VISIBLE);
+            TextView tv_titulo_boas_vindas = findViewById(R.id.tv_titulo_boas_vindas);
+            tv_titulo_boas_vindas.setText(getString(R.string.titulo_boas_vindas, apelidoSalvo));
+        } else if (apelidoSalvo != null) {
+            layout_consentimento.setVisibility(View.GONE);
+            layout_perfil.setVisibility(View.VISIBLE);
+            TextView tv_saudacao_perfil = findViewById(R.id.tv_saudacao_perfil);
+            tv_saudacao_perfil.setText(getString(R.string.saudacao_perfil, apelidoSalvo));
+        } else if (consentimentoAceito) {
+            layout_consentimento.setVisibility(View.GONE);
+            layout_apelido.setVisibility(View.VISIBLE);
+        }
+        atualizarBotaoVoltar();
+    }
+
+    private void salvarBooleano(String chave, boolean valor) {
+        sharedPreferences.edit().putBoolean(chave, valor).apply();
+    }
+
+    private void salvarString(String chave, String valor) {
+        sharedPreferences.edit().putString(chave, valor).apply();
+    }
+
+    private void salvarInt(String chave, int valor) {
+        sharedPreferences.edit().putInt(chave, valor).apply();
+    }
+
     private void atualizarBotaoVoltar() {
-        if (layout_consentimento.getVisibility() == View.VISIBLE) {
+        if (layout_consentimento.getVisibility() == View.VISIBLE || sharedPreferences.getBoolean(KEY_CONFIG_CONCLUIDA, false)) {
             botao_voltar_fluxo.setVisibility(View.GONE);
         } else {
             botao_voltar_fluxo.setVisibility(View.VISIBLE);

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class TelaInicialActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_CADASTRO = 101;
 
     private RecyclerView rvMedicamentos;
     private MedicamentoAdapter adapter;
@@ -44,8 +47,9 @@ public class TelaInicialActivity extends AppCompatActivity {
         // Configurar Calendário Horizontal
         configurarCalendario();
 
-        // Configurar Lista (Mock)
-        configurarLista();
+        // Configurar Lista
+        listaMedicamentos = new ArrayList<>();
+        atualizarInterface();
 
         // Lógica do FAB
         fabAdicionar.setOnClickListener(v -> mostrarOpcoesAdicionar());
@@ -56,7 +60,7 @@ public class TelaInicialActivity extends AppCompatActivity {
         SimpleDateFormat sdfDia = new SimpleDateFormat("dd", Locale.getDefault());
 
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -3); // Começar 3 dias atrás
+        cal.add(Calendar.DAY_OF_YEAR, -3);
 
         for (int i = 0; i < 7; i++) {
             View viewDia = LayoutInflater.from(this).inflate(R.layout.item_dia_calendario, llCalendario, false);
@@ -67,7 +71,6 @@ public class TelaInicialActivity extends AppCompatActivity {
             tvSemana.setText(sdfSemana.format(cal.getTime()));
             tvDia.setText(sdfDia.format(cal.getTime()));
 
-            // Destacar o dia atual (índice 3, pois começamos -3)
             if (i == 3) {
                 container.setBackgroundResource(R.drawable.fundo_dia_item_selecionado);
                 tvSemana.setTextColor(Color.WHITE);
@@ -79,22 +82,21 @@ public class TelaInicialActivity extends AppCompatActivity {
         }
     }
 
-    private void configurarLista() {
-        listaMedicamentos = new ArrayList<>();
-        // Mock de dados
-        listaMedicamentos.add(new Medicamento("Paracetamol 750mg", "08:00", "Tomado"));
-        listaMedicamentos.add(new Medicamento("Amoxicilina 500mg", "14:00", "Pendente"));
-        listaMedicamentos.add(new Medicamento("Vitamina D3", "20:00", "Pendente"));
-
+    private void atualizarInterface() {
         if (listaMedicamentos.isEmpty()) {
             tvVazio.setVisibility(View.VISIBLE);
             rvMedicamentos.setVisibility(View.GONE);
         } else {
             tvVazio.setVisibility(View.GONE);
             rvMedicamentos.setVisibility(View.VISIBLE);
-            adapter = new MedicamentoAdapter(listaMedicamentos);
-            rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
-            rvMedicamentos.setAdapter(adapter);
+            
+            if (adapter == null) {
+                adapter = new MedicamentoAdapter(listaMedicamentos);
+                rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
+                rvMedicamentos.setAdapter(adapter);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -104,18 +106,28 @@ public class TelaInicialActivity extends AppCompatActivity {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("O que deseja fazer?")
                 .setItems(opcoes, (dialog, which) -> {
-                    switch (which) {
-                        case 0:
-                            Toast.makeText(this, "Abrindo cadastro de medicamento...", Toast.LENGTH_SHORT).show();
-                            break;
-                        case 1:
-                            Toast.makeText(this, "Agendando consulta...", Toast.LENGTH_SHORT).show();
-                            break;
-                        case 2:
-                            Toast.makeText(this, "Criando lembrete...", Toast.LENGTH_SHORT).show();
-                            break;
+                    if (which == 0) {
+                        Intent intent = new Intent(this, CadastroMedicamentoActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_CADASTRO);
+                    } else {
+                        Toast.makeText(this, "Funcionalidade em desenvolvimento...", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == REQUEST_CODE_CADASTRO && resultCode == RESULT_OK && data != null) {
+            String nome = data.getStringExtra("NOME");
+            String horario = data.getStringExtra("HORARIO");
+            String freq = data.getStringExtra("FREQUENCIA");
+            
+            // Adiciona o medicamento com todas as informações coletadas
+            listaMedicamentos.add(new Medicamento(nome, horario, freq, "Pendente"));
+            atualizarInterface();
+        }
     }
 }
