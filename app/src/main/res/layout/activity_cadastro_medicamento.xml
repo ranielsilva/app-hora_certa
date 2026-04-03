@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/principal_cadastro"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/branco"
+    android:padding="24dp">
+
+    <!-- Cabeçalho -->
+    <ImageButton
+        android:id="@+id/btn_voltar_cadastro"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_top_toTopOf="parent"
+        app:tint="@color/preto" />
+
+    <TextView
+        android:id="@+id/tv_titulo_cadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Novo Medicamento"
+        android:textColor="@color/preto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btn_voltar_cadastro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_top_toTopOf="@id/btn_voltar_cadastro" />
+
+    <!-- Etapa 1: Nome do Medicamento -->
+    <LinearLayout
+        android:id="@+id/layout_nome_med"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_voltar_cadastro">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/logo_hora_certa2"
+            android:alpha="0.8" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Qual o nome do medicamento?"
+            android:textAlignment="center"
+            android:textColor="@color/preto"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_nome_medicamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Ex: Paracetamol"
+            android:inputType="textCapWords"
+            android:padding="12dp"
+            android:background="@drawable/fundo_card_branco"
+            android:elevation="2dp" />
+
+        <Button
+            android:id="@+id/btn_proximo_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/azul_logo"
+            android:text="Próximo"
+            android:textColor="@color/branco" />
+    </LinearLayout>
+
+    <!-- Etapa 2: Frequência -->
+    <LinearLayout
+        android:id="@+id/layout_frequencia_med"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_voltar_cadastro">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Com que frequência você toma?"
+            android:textAlignment="center"
+            android:textColor="@color/preto"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rg_frequencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <RadioButton
+                android:id="@+id/rb_1_vez"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Uma vez por dia" />
+
+            <RadioButton
+                android:id="@+id/rb_2_vezes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Duas vezes por dia" />
+
+            <RadioButton
+                android:id="@+id/rb_3_vezes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Três vezes por dia" />
+
+            <RadioButton
+                android:id="@+id/rb_mais_opcoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Mais opções" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_proximo_frequencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/azul_logo"
+            android:text="Próximo"
+            android:textColor="@color/branco" />
+    </LinearLayout>
+
+    <!-- Etapa 3: Tratamento/Doença -->
+    <LinearLayout
+        android:id="@+id/layout_tratamento_med"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_voltar_cadastro">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Para qual tratamento ou doença?"
+            android:textAlignment="center"
+            android:textColor="@color/preto"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_tratamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Ex: Febre, Diabetes, etc."
+            android:inputType="textCapSentences"
+            android:padding="12dp"
+            android:background="@drawable/fundo_card_branco"
+            android:elevation="2dp" />
+
+        <Button
+            android:id="@+id/btn_salvar_med"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/verde_folha"
+            android:text="Salvar Medicamento"
+            android:textColor="@color/branco" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
