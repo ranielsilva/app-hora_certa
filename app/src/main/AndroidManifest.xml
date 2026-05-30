@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissões para Notificações e Alarmes -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -34,6 +39,20 @@
         <activity
             android:name=".CadastroMedicamentoActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".CadastroConsultaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CadastroLembreteActivity"
+            android:exported="false" />
+
+        <!-- Receiver para os Lembretes -->
+        <receiver
+            android:name=".ReminderReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
     </application>
 

@@ -11,6 +11,15 @@ import java.util.List;
 public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.ViewHolder> {
 
     private List<Medicamento> listaMedicamentos;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onStatusClick(Medicamento med);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public MedicamentoAdapter(List<Medicamento> listaMedicamentos) {
         this.listaMedicamentos = listaMedicamentos;
@@ -28,7 +37,6 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
         Medicamento medicamento = listaMedicamentos.get(position);
         holder.tvNome.setText(medicamento.getNome());
         
-        // Exibe Horário + Frequência (Ex: 08:00 - Uma vez por dia)
         String infoHorario = medicamento.getHorario() + " - " + medicamento.getFrequencia();
         holder.tvHorario.setText(infoHorario);
         
@@ -39,6 +47,12 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
         } else {
             holder.tvStatus.setBackgroundResource(R.drawable.fundo_status_pendente);
         }
+
+        holder.tvStatus.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onStatusClick(medicamento);
+            }
+        });
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,11 +33,14 @@ public class TelaInicialActivity extends AppCompatActivity {
     private List<Medicamento> listaMedicamentos;
     private LinearLayout llCalendario;
     private TextView tvVazio;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_inicial);
+
+        dbHelper = new DatabaseHelper(this);
 
         // Inicialização de componentes
         rvMedicamentos = findViewById(R.id.rv_medicamentos);
@@ -48,11 +52,15 @@ public class TelaInicialActivity extends AppCompatActivity {
         configurarCalendario();
 
         // Configurar Lista
-        listaMedicamentos = new ArrayList<>();
-        atualizarInterface();
+        carregarMedicamentos();
 
         // Lógica do FAB
         fabAdicionar.setOnClickListener(v -> mostrarOpcoesAdicionar());
+    }
+
+    private void carregarMedicamentos() {
+        listaMedicamentos = dbHelper.listarMedicamentos();
+        atualizarInterface();
     }
 
     private void configurarCalendario() {
@@ -90,14 +98,29 @@ public class TelaInicialActivity extends AppCompatActivity {
             tvVazio.setVisibility(View.GONE);
             rvMedicamentos.setVisibility(View.VISIBLE);
             
-            if (adapter == null) {
-                adapter = new MedicamentoAdapter(listaMedicamentos);
-                rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
-                rvMedicamentos.setAdapter(adapter);
-            } else {
-                adapter.notifyDataSetChanged();
-            }
+            adapter = new MedicamentoAdapter(listaMedicamentos);
+            adapter.setOnItemClickListener(new MedicamentoAdapter.OnItemClickListener() {
+                @Override
+                public void onStatusClick(Medicamento med) {
+                    registrarUso(med);
+                }
+            });
+            rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
+            rvMedicamentos.setAdapter(adapter);
         }
+    }
+
+    private void registrarUso(Medicamento med) {
+        String novoStatus = med.getStatus().equals("Tomado") ? "Pendente" : "Tomado";
+        dbHelper.atualizarStatus(med.getId(), novoStatus);
+        
+        if (novoStatus.equals("Tomado")) {
+            String dataHora = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date());
+            dbHelper.inserirHistorico(med.getId(), dataHora, "Tomado");
+            Toast.makeText(this, med.getNome() + " marcado como tomado!", Toast.LENGTH_SHORT).show();
+        }
+        
+        carregarMedicamentos();
     }
 
     private void mostrarOpcoesAdicionar() {
@@ -106,11 +129,20 @@ public class TelaInicialActivity extends AppCompatActivity {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("O que deseja fazer?")
                 .setItems(opcoes, (dialog, which) -> {
-                    if (which == 0) {
-                        Intent intent = new Intent(this, CadastroMedicamentoActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE_CADASTRO);
-                    } else {
-                        Toast.makeText(this, "Funcionalidade em desenvolvimento...", Toast.LENGTH_SHORT).show();
+                    Intent intent;
+                    switch (which) {
+                        case 0:
+                            intent = new Intent(this, CadastroMedicamentoActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE_CADASTRO);
+                            break;
+                        case 1:
+                            intent = new Intent(this, CadastroConsultaActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 2:
+                            intent = new Intent(this, CadastroLembreteActivity.class);
+                            startActivity(intent);
+                            break;
                     }
                 })
                 .show();
@@ -119,15 +151,8 @@ public class TelaInicialActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
-        if (requestCode == REQUEST_CODE_CADASTRO && resultCode == RESULT_OK && data != null) {
-            String nome = data.getStringExtra("NOME");
-            String horario = data.getStringExtra("HORARIO");
-            String freq = data.getStringExtra("FREQUENCIA");
-            
-            // Adiciona o medicamento com todas as informações coletadas
-            listaMedicamentos.add(new Medicamento(nome, horario, freq, "Pendente"));
-            atualizarInterface();
+        if (requestCode == REQUEST_CODE_CADASTRO && resultCode == RESULT_OK) {
+            carregarMedicamentos();
         }
     }
 }

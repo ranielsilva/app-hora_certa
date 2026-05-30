@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/branco"
+    android:padding="24dp">
+
+    <ImageButton
+        android:id="@+id/btn_voltar_lembrete"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/preto" />
+
+    <TextView
+        android:id="@+id/tv_titulo_lembrete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Criar Lembrete"
+        android:textColor="@color/preto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btn_voltar_lembrete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_voltar_lembrete" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/btn_voltar_lembrete">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Título"
+            android:textColor="@color/preto"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_titulo_lembrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/fundo_card_branco"
+            android:elevation="2dp"
+            android:hint="Ex: Beber água, Comprar gaze"
+            android:padding="12dp"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Descrição (opcional)"
+            android:textColor="@color/preto"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_descricao_lembrete"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/fundo_card_branco"
+            android:elevation="2dp"
+            android:gravity="top"
+            android:hint="Adicione detalhes..."
+            android:padding="12dp"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Data"
+                    android:textColor="@color/preto"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_data_lembrete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/branco_fumaca"
+                    android:text="Selecionar"
+                    android:textColor="@color/preto" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hora"
+                    android:textColor="@color/preto"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_hora_lembrete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/branco_fumaca"
+                    android:text="Selecionar"
+                    android:textColor="@color/preto" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_salvar_lembrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/azul_logo"
+            android:text="Salvar Lembrete"
+            android:textColor="@color/branco" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

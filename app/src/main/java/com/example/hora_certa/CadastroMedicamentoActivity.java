@@ -1,6 +1,9 @@
 package com.example.hora_certa;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,13 +29,17 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
     private RadioGroup rgFrequencia;
     private Button btnSelecionarHorario;
     private Animation animEntrada;
+    private DatabaseHelper dbHelper;
 
     private String nomeMed, frequenciaMed, horarioMed = "08:00", tratamentoMed;
+    private int horaSelecionada = 8, minutoSelecionado = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_medicamento);
+
+        dbHelper = new DatabaseHelper(this);
 
         // Inicializar Views
         layoutNome = findViewById(R.id.layout_nome_med);
@@ -83,7 +90,7 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
             if (tratamentoMed.isEmpty()) {
                 etTratamento.setError("Digite o tratamento");
             } else {
-                salvarERetornar();
+                salvarEConfigurarAlarme();
             }
         });
 
@@ -96,6 +103,8 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
         int minuto = calendar.get(Calendar.MINUTE);
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            horaSelecionada = hourOfDay;
+            minutoSelecionado = minute;
             horarioMed = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
             btnSelecionarHorario.setText(horarioMed);
         }, hora, minuto, true);
@@ -113,15 +122,40 @@ public class CadastroMedicamentoActivity extends AppCompatActivity {
         layoutParaExibir.startAnimation(animEntrada);
     }
 
-    private void salvarERetornar() {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("NOME", nomeMed);
-        resultIntent.putExtra("HORARIO", horarioMed);
-        resultIntent.putExtra("FREQUENCIA", frequenciaMed);
-        resultIntent.putExtra("TRATAMENTO", tratamentoMed);
-        setResult(RESULT_OK, resultIntent);
-        
-        Toast.makeText(this, "Medicamento salvo com sucesso!", Toast.LENGTH_SHORT).show();
-        finish();
+    private void salvarEConfigurarAlarme() {
+        Medicamento novoMed = new Medicamento(nomeMed, horarioMed, frequenciaMed, tratamentoMed, "Pendente");
+        long id = dbHelper.inserirMedicamento(novoMed);
+
+        if (id != -1) {
+            agendarNotificacao((int) id);
+            Toast.makeText(this, "Medicamento salvo e lembrete configurado!", Toast.LENGTH_SHORT).show();
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            Toast.makeText(this, "Erro ao salvar medicamento", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void agendarNotificacao(int id) {
+        Intent intent = new Intent(this, ReminderReceiver.class);
+        intent.putExtra("NOME", nomeMed);
+        intent.putExtra("ID", id);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, horaSelecionada);
+        calendar.set(Calendar.MINUTE, minutoSelecionado);
+        calendar.set(Calendar.SECOND, 0);
+
+        // Se o horário já passou hoje, agenda para amanhã
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        if (alarmManager != null) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
     }
 }
